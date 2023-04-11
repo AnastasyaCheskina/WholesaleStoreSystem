@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WholesaleStoreSystem
 {
-    internal class UserCart : Products
+    internal class UserCart : Productsaaa
     {
         
     }

@@ -16,6 +16,7 @@ namespace WholesaleStoreSystem
             Products products = new Products();
             BinaryFormatter bf = new BinaryFormatter();
             List<string> allProducts = new List<string>(); //хранилище списка всех товаров
+            List<Products> productsArray = new List<Products>();
             bool isHeader = true; //обход заголовка таблицы
             foreach (var line in File.ReadLines("Products.csv"))
             {
@@ -25,15 +26,24 @@ namespace WholesaleStoreSystem
                     continue;
                 }
                 string[] fields = line.Split(','); //считываем строки по разделителю
-                allProducts.Add(fields[0]); //добавляем в лист
+                for (int i = 0; i < fields.Length; i++)
+                {
+                    string value = fields[i];
+                    allProducts.Add(value); //добавляем в лист
+                }
             }
             foreach (var product in allProducts)
             {
-                //products.Id = Convert.ToInt32(fields[0]);
-                //products.Name = fields[1];
-                //products.Price = Convert.ToInt32(fields[2]);
-                //products.Count = Convert.ToInt32(fields[3]);
-                //Console.WriteLine(products);
+                string[] tempStr = product.Split(';');
+                products.Id = int.Parse(tempStr[0]);
+                products.Name = tempStr[1];
+                products.Price = int.Parse(tempStr[2]);
+                products.Count = int.Parse(tempStr[3]);
+                productsArray.Add(products);
+            }
+            foreach (var product in productsArray)
+            {
+                Console.WriteLine(product);
             }
         }
     }

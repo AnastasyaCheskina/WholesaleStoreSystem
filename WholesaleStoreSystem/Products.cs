@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace WholesaleStoreSystem
 {
-    [Serializable]
-    internal class Products
+    struct Products
     {
         int id;
         string name;
         double price;
         int count;
+
         //public Products(int id,string name, double price, int count)
         //{
         //    this.Id = id;
@@ -27,7 +27,11 @@ namespace WholesaleStoreSystem
 
         public override string ToString()
         {
-            return "Наименование: "+name+" "+", цена: "+count.ToString()+", id товара: "+id.ToString();
+            return "Наименование: " + name + " " + ",цена: " + count.ToString() + ",id товара: " + id.ToString();
         }
+    }
+    internal class Productsaaa
+    {
+        
     }
 }
