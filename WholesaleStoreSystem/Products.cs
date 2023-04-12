@@ -12,7 +12,13 @@ namespace WholesaleStoreSystem
         string name;
         double price;
         int count;
-
+        public Products(int id, string name, double price, int count)
+        {
+            this.id = id;
+            this.name = name;
+            this.price = price;
+            this.count = count;
+        }
         public string Name { get => name; set => name = value; }
         public double Price { get => price; set => price = value; }
         public int Count { get => count; set => count = value; }

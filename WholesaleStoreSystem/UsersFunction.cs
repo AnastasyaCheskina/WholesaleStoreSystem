@@ -22,7 +22,8 @@ namespace WholesaleStoreSystem
                 case 1:
                     functionalForClient();
                     break;
-                default : Console.WriteLine("Недопустимый тип пользователя. Перезапустите систему и повторите ввод");
+                default : 
+                    Console.WriteLine("Недопустимый тип пользователя. Перезапустите систему и повторите ввод");
                     break;
             }
         }
@@ -32,7 +33,7 @@ namespace WholesaleStoreSystem
             int znachFlag = 0;
             while (flag)
             {
-                Console.WriteLine("Доступные действия:\n1-Показать список товаров\n2-Изменить товар\n3-\nВыберите номер действия: ");
+                Console.WriteLine("Доступные действия:\n1-Показать список товаров\n2-Добавить новый товар в список\n3-Удалить товар из списка\nВыберите номер действия: ");
                 int numberFunc = int.Parse(Console.ReadLine());
                 switch (numberFunc)
                 {
@@ -40,11 +41,10 @@ namespace WholesaleStoreSystem
                         showAllProducts();
                         break;
                     case 2:
-                        showAllProducts();
-
+                        addAtCart();
                         break;
                     case 3:
-                        
+                        deleteProductAtList();
                         break;
                     default:
                         Console.WriteLine("Неверное значение, повторите попытку");
@@ -103,7 +103,7 @@ namespace WholesaleStoreSystem
         {
             Console.WriteLine("Введите id нужного товара:");
             int id = int.Parse(Console.ReadLine());
-            if (id < 0 || id > productsList.Count)
+            if (id < 0 || id >= productsList.Count)
             {
                 Console.WriteLine("Товар не найден");
                 id = -1;
@@ -146,6 +146,33 @@ namespace WholesaleStoreSystem
                 }
                 Console.WriteLine("Итоговая стоимость: "+sum);
             }
+        }
+        private static List<Products> deleteProductAtList() //удалить товар из списка
+        {
+            Console.WriteLine("Введите id нужного товара:");
+            int id = int.Parse(Console.ReadLine());
+            if (!(id < 0 || id >= productsList.Count))
+            {
+                List<Products> changeProducts = productsList.FindAll(item => item.Id == id);
+                productsList.Remove(changeProducts.First());
+                Console.WriteLine("Товар под номером {0} был удален",id);
+            }
+            else Console.WriteLine("Товар не найден");
+            return productsList;
+        }
+        private static List<Products> addNewProduct() //добавить новый товар в список
+        {
+            Console.WriteLine("Введите наименование продукции:");
+            string name = Console.ReadLine();
+            Console.WriteLine("Введите цену продукции:");
+            double price = double.Parse(Console.ReadLine());
+            Console.WriteLine("Введите количество продукции на складе:");
+            int count = int.Parse(Console.ReadLine());
+            int id = productsList.Last().Id + 1;
+            Products products = new Products(id, name, price, count);
+            productsList.Add(products);
+            Console.WriteLine("Товар был успешно добавлен!");
+            return productsList;
         }
     }
 }
