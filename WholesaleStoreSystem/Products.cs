@@ -19,10 +19,10 @@ namespace WholesaleStoreSystem
             this.price = price;
             this.count = count;
         }
+        public int Id { get => id; set => id = value; }
         public string Name { get => name; set => name = value; }
         public double Price { get => price; set => price = value; }
         public int Count { get => count; set => count = value; }
-        public int Id { get => id; set => id = value; }
 
         public override string ToString()
         {

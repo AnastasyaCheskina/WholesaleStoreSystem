@@ -10,8 +10,7 @@ namespace WholesaleStoreSystem
 {
     internal class WorkWithFiles
     {
-        private static string pathTableProducts = "Products.csv";
-        public static List<Products> getDataAtFiles()
+        public static List<Products> getDataAtFiles(string pathTableProducts)
         {
             Products products = new Products(); //экземпляр структуры
             List<string> allProducts = new List<string>(); //хранилище списка всех товаров
@@ -40,10 +39,6 @@ namespace WholesaleStoreSystem
                 products.Count = int.Parse(tempStr[3]);
                 productsArray.Add(products);
             }
-            //foreach (var product in productsArray) //вывод (временная мера)
-            //{
-            //    Console.WriteLine(product);
-            //}
             return productsArray;
         }
     }

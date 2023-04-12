@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -8,7 +10,8 @@ namespace WholesaleStoreSystem
 {
     internal class UsersFunction
     {
-        private static List<Products> productsList = WorkWithFiles.getDataAtFiles(); //все товары
+        private static string pathTableProducts = "Products.csv";
+        private static List<Products> productsList = WorkWithFiles.getDataAtFiles(pathTableProducts); //все товары
         private static List<Cart> allProductsAtCart = new List<Cart>(); //товары в корзине
         public static void startProgram() //старт программы
         {
@@ -33,7 +36,7 @@ namespace WholesaleStoreSystem
             int znachFlag = 0;
             while (flag)
             {
-                Console.WriteLine("Доступные действия:\n1-Показать список товаров\n2-Добавить новый товар в список\n3-Удалить товар из списка\n4-Поиск\nВыберите номер действия: ");
+                Console.WriteLine("Доступные действия:\n1-Показать список товаров\n2-Добавить новый товар в список\n3-Удалить товар из списка\n4-Поиск\n5-Выгрузить изменения\nВыберите номер действия: ");
                 int numberFunc = int.Parse(Console.ReadLine());
                 switch (numberFunc)
                 {
@@ -48,6 +51,9 @@ namespace WholesaleStoreSystem
                         break;
                     case 4:
                         findProduct();
+                        break;
+                    case 5:
+                        addChanges();
                         break;
                     default:
                         Console.WriteLine("Неверное значение, повторите попытку");
@@ -198,6 +204,26 @@ namespace WholesaleStoreSystem
                 }
             }
             else Console.WriteLine("По вашему запросу ничего не найдено");
+        }
+        private static void WriteCSV<T>(IEnumerable<T> items, string path)
+        {
+            Type itemType = typeof(T);
+            var props = itemType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            File.WriteAllText(path, string.Empty);
+            using (var writer = new StreamWriter(path))
+            {
+                writer.WriteLine(string.Join("; ", props.Select(p => p.Name)));
+                foreach (var item in items)
+                {
+                    writer.WriteLine(string.Join("; ", props.Select(p => p.GetValue(item, null))));
+                }
+            }
+        }
+        private static void addChanges() //синхронизация изменений с базой
+        {
+            var people = productsList;
+            WriteCSV(people, pathTableProducts);
+            Console.WriteLine("Выгрузка данных завершена");
         }
     }
 }
