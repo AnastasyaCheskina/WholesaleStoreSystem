@@ -8,7 +8,9 @@ namespace WholesaleStoreSystem
 {
     internal class UsersFunction
     {
-        public static void startProgram()
+        private static List<Products> productsList = WorkWithFiles.getDataAtFiles(); //все товары
+        private static List<Cart> allProductsAtCart = new List<Cart>(); //товары в корзине
+        public static void startProgram() //старт программы
         {
             Console.WriteLine("ИС Оптовый склад\nВыберите тип пользователя:\n0-Администратор, 1-Клиент");
             int typeUser = int.Parse(Console.ReadLine());
@@ -24,25 +26,26 @@ namespace WholesaleStoreSystem
                     break;
             }
         }
-        static void functionalForAdmin()
+        private static void functionalForAdmin() //метод вызова функционала для админа
         {
             bool flag = true;
             int znachFlag = 0;
             while (flag)
             {
-                Console.WriteLine("Доступные действия:\n1-\n2-\n3-\nВыберите номер действия: ");
+                Console.WriteLine("Доступные действия:\n1-Показать список товаров\n2-Изменить товар\n3-\nВыберите номер действия: ");
                 int numberFunc = int.Parse(Console.ReadLine());
                 switch (numberFunc)
                 {
                     case 1:
-                        
-                    break;
+                        showAllProducts();
+                        break;
                     case 2:
-                        
-                    break;
+                        showAllProducts();
+
+                        break;
                     case 3:
                         
-                    break;
+                        break;
                     default:
                         Console.WriteLine("Неверное значение, повторите попытку");
                         break;
@@ -58,24 +61,21 @@ namespace WholesaleStoreSystem
                 }
             }
         }
-        static void functionalForClient()
+        private static void functionalForClient() //метод вызова функционала для клиента
         {
             bool flag = true;
             int znachFlag = 0;
             while (flag)
             {
-                Console.WriteLine("Доступные действия:\n1-\n2-\n3-\nВыберите номер действия: ");
+                Console.WriteLine("Доступные действия:\n1-Показать список товаров\n2-Добавить товар в корзину и перейти\nВыберите номер действия: ");
                 int numberFunc = int.Parse(Console.ReadLine());
                 switch (numberFunc)
                 {
                     case 1:
-
+                        showAllProducts();
                         break;
                     case 2:
-
-                        break;
-                    case 3:
-
+                        showCart();
                         break;
                     default:
                         Console.WriteLine("Неверное значение, повторите попытку");
@@ -88,8 +88,63 @@ namespace WholesaleStoreSystem
                 {
                     flag = false;
                     Console.WriteLine("Работа программы завершена, нажмите любую клавишу чтобы выйти");
-                    Console.ReadKey();
                 }
+            }
+        }
+        private static void showAllProducts() //вывод всех продуктов на экран
+        {
+            foreach (var product in productsList)
+            {
+                Console.WriteLine(product);
+            }
+        }
+
+        private static int dialogAddAtCart() //метод для реализации диалога с пользователем в корзине
+        {
+            Console.WriteLine("Введите id нужного товара:");
+            int id = int.Parse(Console.ReadLine());
+            if (id < 0 || id > productsList.Count)
+            {
+                Console.WriteLine("Товар не найден");
+                id = -1;
+            }
+            else Console.WriteLine("Товар успешно добавлен в корзину!");
+            return id;
+        }
+        private static List<Cart> addAtCart() //добавление товаров в корзину 
+        {
+            int id = dialogAddAtCart();
+            Cart cartUser = new Cart();
+            if (id >= 0)
+            {
+                foreach (var item in productsList)
+                {
+                    if (item.Id == id)
+                    {
+                        cartUser.Id = item.Id;
+                        cartUser.Name = item.Name;
+                        cartUser.Price = item.Price;
+                        allProductsAtCart.Add(cartUser);
+                        break;
+                    }
+                    else continue;
+                }
+            }
+            return allProductsAtCart;
+        }
+        private static void showCart() //вывод корзины на экран с подсчетом итоговой стоимости
+        {
+            List<Cart> allProductsAtCart = addAtCart();
+            double sum = 0;
+            if (allProductsAtCart.Count <= 0) Console.WriteLine("Корзина пуста");
+            else
+            {
+                foreach (var cart in allProductsAtCart)
+                {
+                    sum += cart.Price;
+                    Console.WriteLine(cart);
+                }
+                Console.WriteLine("Итоговая стоимость: "+sum);
             }
         }
     }

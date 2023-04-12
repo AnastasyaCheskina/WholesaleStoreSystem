@@ -6,7 +6,17 @@ using System.Threading.Tasks;
 
 namespace WholesaleStoreSystem
 {
-    internal class UserCart : Productsaaa
+    struct Cart
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public double Price { get; set; }
+        public override string ToString()
+        {
+            return "Наименование: "+Name+", цена: "+Price;
+        }
+    }
+    internal class UserCart
     {
         
     }

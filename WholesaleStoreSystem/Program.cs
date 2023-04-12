@@ -13,8 +13,8 @@ namespace WholesaleStoreSystem
         static void Main(string[] args)
         {
 
-            //UsersFunction.startProgram();
-            WorkWithFiles.getDataAtFiles();
+            UsersFunction.startProgram();
+            //WorkWithFiles.getDataAtFiles();
             Console.ReadKey();
 		}
     }
