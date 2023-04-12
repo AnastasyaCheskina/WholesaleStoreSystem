@@ -29,8 +29,5 @@ namespace WholesaleStoreSystem
             return "Наименование: " + name + ", цена: " + count.ToString() + ", id товара: " + id.ToString();
         }
     }
-    internal class Productsaaa
-    {
-        
-    }
+
 }

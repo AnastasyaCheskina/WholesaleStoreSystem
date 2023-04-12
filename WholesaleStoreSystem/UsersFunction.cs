@@ -33,7 +33,7 @@ namespace WholesaleStoreSystem
             int znachFlag = 0;
             while (flag)
             {
-                Console.WriteLine("Доступные действия:\n1-Показать список товаров\n2-Добавить новый товар в список\n3-Удалить товар из списка\nВыберите номер действия: ");
+                Console.WriteLine("Доступные действия:\n1-Показать список товаров\n2-Добавить новый товар в список\n3-Удалить товар из списка\n4-Поиск\nВыберите номер действия: ");
                 int numberFunc = int.Parse(Console.ReadLine());
                 switch (numberFunc)
                 {
@@ -45,6 +45,9 @@ namespace WholesaleStoreSystem
                         break;
                     case 3:
                         deleteProductAtList();
+                        break;
+                    case 4:
+                        findProduct();
                         break;
                     default:
                         Console.WriteLine("Неверное значение, повторите попытку");
@@ -67,7 +70,7 @@ namespace WholesaleStoreSystem
             int znachFlag = 0;
             while (flag)
             {
-                Console.WriteLine("Доступные действия:\n1-Показать список товаров\n2-Добавить товар в корзину и перейти\nВыберите номер действия: ");
+                Console.WriteLine("Доступные действия:\n1-Показать список товаров\n2-Добавить товар в корзину и перейти\n3-Поиск\nВыберите номер действия: ");
                 int numberFunc = int.Parse(Console.ReadLine());
                 switch (numberFunc)
                 {
@@ -76,6 +79,9 @@ namespace WholesaleStoreSystem
                         break;
                     case 2:
                         showCart();
+                        break;
+                    case 3:
+                        findProduct();
                         break;
                     default:
                         Console.WriteLine("Неверное значение, повторите попытку");
@@ -173,6 +179,25 @@ namespace WholesaleStoreSystem
             productsList.Add(products);
             Console.WriteLine("Товар был успешно добавлен!");
             return productsList;
+        }
+        private static void findProduct() //поиск по полному совпадению
+        {
+            Console.WriteLine("Введите поисковой запрос: (только точное совпадение по названию)");
+            string text = Console.ReadLine();
+            List<Products> findText = new List<Products>();
+            foreach (var item in productsList)
+            {
+                if (item.Name == text) findText.Add(item);
+            }
+            if (findText.Count > 0)
+            {
+                Console.WriteLine("Найденные запросы:");
+                foreach (var item in findText)
+                {
+                    Console.WriteLine(item);
+                }
+            }
+            else Console.WriteLine("По вашему запросу ничего не найдено");
         }
     }
 }

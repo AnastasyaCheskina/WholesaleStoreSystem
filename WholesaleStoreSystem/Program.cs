@@ -14,7 +14,6 @@ namespace WholesaleStoreSystem
         {
 
             UsersFunction.startProgram();
-            //WorkWithFiles.getDataAtFiles();
             Console.ReadKey();
 		}
     }
