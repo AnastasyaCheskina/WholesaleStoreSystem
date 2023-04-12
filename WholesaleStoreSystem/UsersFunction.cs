@@ -41,7 +41,7 @@ namespace WholesaleStoreSystem
                         showAllProducts();
                         break;
                     case 2:
-                        addAtCart();
+                        addNewProduct();
                         break;
                     case 3:
                         deleteProductAtList();
