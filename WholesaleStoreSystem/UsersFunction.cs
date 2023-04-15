@@ -12,8 +12,10 @@ namespace WholesaleStoreSystem
     {
         private static string pathTableProducts = "Products.csv";
         private static string pathUserCart = "Cart.csv";
+        private static string pathOrders = "Order.csv";
         private static List<Products> productsList = WorkWithFiles.getDataAtFiles(pathTableProducts); //все товары
         private static List<Cart> allProductsAtCart = WorkWithFiles.getDataAtFilesCart(pathUserCart); //товары в корзине
+        private static List<Cart> allOrders = WorkWithFiles.getDataAtFilesCart(pathOrders); //заказанные товары
         public static void startProgram() //старт программы
         {
             Console.WriteLine("ИС Оптовый склад\nВыберите тип пользователя:\n0-Администратор, 1-Клиент");
@@ -37,7 +39,7 @@ namespace WholesaleStoreSystem
             int znachFlag = 0;
             while (flag)
             {
-                Console.WriteLine("Доступные действия:\n1-Показать список товаров\n2-Добавить новый товар в список\n3-Удалить товар из списка\n4-Поиск\n5-Выгрузить изменения\nВыберите номер действия: ");
+                Console.WriteLine("Доступные действия:\n1-Показать список товаров\n2-Добавить новый товар в список\n3-Удалить товар из списка\n4-Поиск\n5-Выгрузить изменения\n6-Посмотреть историю заказов\nВыберите номер действия: ");
                 int numberFunc = int.Parse(Console.ReadLine());
                 switch (numberFunc)
                 {
@@ -55,6 +57,9 @@ namespace WholesaleStoreSystem
                         break;
                     case 5:
                         addChanges();
+                        break;
+                    case 6:
+                        showHistoryOrders();
                         break;
                     default:
                         Console.WriteLine("Неверное значение, повторите попытку");
@@ -77,7 +82,8 @@ namespace WholesaleStoreSystem
             int znachFlag = 0;
             while (flag)
             {
-                Console.WriteLine("Доступные действия:\n1-Показать список товаров\n2-Добавить товар в корзину и перейти\n3-Поиск\n4-Очистить корзину\n5-Перейти в корзину\nВыберите номер действия: ");
+                Console.WriteLine("Доступные действия:\n1-Показать список товаров\n2-Добавить товар в корзину и перейти\n3-Поиск\n4-Очистить корзину\n5-Перейти в корзину");
+                Console.WriteLine("6-Оформить заказ\n7-Посмотреть историю заказов\nВыберите номер действия:");
                 int numberFunc = int.Parse(Console.ReadLine());
                 switch (numberFunc)
                 {
@@ -96,6 +102,12 @@ namespace WholesaleStoreSystem
                         break;
                     case 5:
                         showCart();
+                        break;
+                    case 6:
+                        placeOrder();
+                        break;
+                    case 7:
+                        showHistoryOrders();
                         break;
                     default:
                         Console.WriteLine("Неверное значение, повторите попытку");
@@ -154,16 +166,13 @@ namespace WholesaleStoreSystem
         }
         private static void showCart() //вывод корзины на экран с подсчетом итоговой стоимости
         {
-            double sum = 0;
             if (allProductsAtCart.Count <= 0) Console.WriteLine("Корзина пуста");
             else
             {
                 foreach (var cart in allProductsAtCart)
                 {
-                    sum += cart.Price;
                     Console.WriteLine(cart);
                 }
-                Console.WriteLine("Итоговая стоимость: "+sum);
             }
         }
         private static List<Products> deleteProductAtList() //удалить товар из списка всех товаров
@@ -256,6 +265,40 @@ namespace WholesaleStoreSystem
             }
             return allProductsAtCart;
         }
-
+        private static List<Cart> placeOrder() //оформить заказ
+        {
+            double sum = 0;
+            if (allProductsAtCart.Count == 0) Console.WriteLine("Корзина пуста и Вы не можете оформить заказ");
+            else
+            {
+                foreach (var product in allProductsAtCart)
+                {
+                    sum += product.Price;
+                }
+                Console.WriteLine("Состав заказа:");
+                showCart();
+                Console.WriteLine("Итоговая стоимость: " + sum);
+                Console.WriteLine("Дата оформления заказа: " + DateTime.Now);
+                Console.WriteLine("Заказ успешно оформлен");
+                WriteCSV(allProductsAtCart, pathOrders);
+                allProductsAtCart.Clear();
+            }
+            return allProductsAtCart;
+        }
+        private static void showHistoryOrders() //показать историю заказов
+        {
+            double sum = 0;
+            if (allOrders.Count > 0)
+            {
+                Console.WriteLine("Список заказанных товаров:");
+                foreach (var product in allOrders)
+                {
+                    sum += product.Price;
+                    Console.WriteLine(product);
+                }
+                Console.WriteLine("Всего было куплено товаров на сумму: " + sum);
+            }
+            else Console.WriteLine("Вы не приобрели ни одного товара");
+        }
     }
 }
