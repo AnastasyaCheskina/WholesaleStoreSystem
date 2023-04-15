@@ -11,8 +11,9 @@ namespace WholesaleStoreSystem
     internal class UsersFunction
     {
         private static string pathTableProducts = "Products.csv";
+        private static string pathUserCart = "Cart.csv";
         private static List<Products> productsList = WorkWithFiles.getDataAtFiles(pathTableProducts); //все товары
-        private static List<Cart> allProductsAtCart = new List<Cart>(); //товары в корзине
+        private static List<Cart> allProductsAtCart = WorkWithFiles.getDataAtFilesCart(pathUserCart); //товары в корзине
         public static void startProgram() //старт программы
         {
             Console.WriteLine("ИС Оптовый склад\nВыберите тип пользователя:\n0-Администратор, 1-Клиент");
@@ -76,7 +77,7 @@ namespace WholesaleStoreSystem
             int znachFlag = 0;
             while (flag)
             {
-                Console.WriteLine("Доступные действия:\n1-Показать список товаров\n2-Добавить товар в корзину и перейти\n3-Поиск\nВыберите номер действия: ");
+                Console.WriteLine("Доступные действия:\n1-Показать список товаров\n2-Добавить товар в корзину и перейти\n3-Поиск\n4-Очистить корзину\n5-Перейти в корзину\nВыберите номер действия: ");
                 int numberFunc = int.Parse(Console.ReadLine());
                 switch (numberFunc)
                 {
@@ -84,10 +85,17 @@ namespace WholesaleStoreSystem
                         showAllProducts();
                         break;
                     case 2:
+                        addAtCart();
                         showCart();
                         break;
                     case 3:
                         findProduct();
+                        break;
+                    case 4:
+                        clearCart();
+                        break;
+                    case 5:
+                        showCart();
                         break;
                     default:
                         Console.WriteLine("Неверное значение, повторите попытку");
@@ -99,6 +107,7 @@ namespace WholesaleStoreSystem
                 else
                 {
                     flag = false;
+                    WriteCSV(allProductsAtCart, pathUserCart);
                     Console.WriteLine("Работа программы завершена, нажмите любую клавишу чтобы выйти");
                 }
             }
@@ -110,7 +119,6 @@ namespace WholesaleStoreSystem
                 Console.WriteLine(product);
             }
         }
-
         private static int dialogAddAtCart() //метод для реализации диалога с пользователем в корзине
         {
             Console.WriteLine("Введите id нужного товара:");
@@ -120,7 +128,7 @@ namespace WholesaleStoreSystem
                 Console.WriteLine("Товар не найден");
                 id = -1;
             }
-            else Console.WriteLine("Товар успешно добавлен в корзину!");
+            else Console.WriteLine("Операция выполнена!");
             return id;
         }
         private static List<Cart> addAtCart() //добавление товаров в корзину 
@@ -146,7 +154,6 @@ namespace WholesaleStoreSystem
         }
         private static void showCart() //вывод корзины на экран с подсчетом итоговой стоимости
         {
-            List<Cart> allProductsAtCart = addAtCart();
             double sum = 0;
             if (allProductsAtCart.Count <= 0) Console.WriteLine("Корзина пуста");
             else
@@ -159,7 +166,7 @@ namespace WholesaleStoreSystem
                 Console.WriteLine("Итоговая стоимость: "+sum);
             }
         }
-        private static List<Products> deleteProductAtList() //удалить товар из списка
+        private static List<Products> deleteProductAtList() //удалить товар из списка всех товаров
         {
             Console.WriteLine("Введите id нужного товара:");
             int id = int.Parse(Console.ReadLine());
@@ -172,7 +179,7 @@ namespace WholesaleStoreSystem
             else Console.WriteLine("Товар не найден");
             return productsList;
         }
-        private static List<Products> addNewProduct() //добавить новый товар в список
+        private static List<Products> addNewProduct() //добавить новый товар в список всех товаров
         {
             Console.WriteLine("Введите наименование продукции:");
             string name = Console.ReadLine();
@@ -186,17 +193,11 @@ namespace WholesaleStoreSystem
             Console.WriteLine("Товар был успешно добавлен!");
             return productsList;
         }
-        private static void findProduct() //поиск по полному совпадению
+        private static void findProduct() //поиск товаров по имени
         {
-            Console.WriteLine("Введите поисковой запрос: (только точное совпадение по названию)");
+            Console.WriteLine("Введите поисковой запрос: ");
             string text = Console.ReadLine();
             List<Products> findText = productsList.Where(x=>x.Name.Contains(text)).ToList();
-
-            //List<Products> findText = new List<Products>();
-            //foreach (var item in productsList)
-            //{
-            //    if (item.Name == text) findText.Add(item);
-            //}
             if (findText.Count > 0)
             {
                 Console.WriteLine("Найденные запросы:");
@@ -207,7 +208,7 @@ namespace WholesaleStoreSystem
             }
             else Console.WriteLine("По вашему запросу ничего не найдено");
         }
-        private static void WriteCSV<T>(IEnumerable<T> items, string path)
+        private static void WriteCSV<T>(IEnumerable<T> items, string path) //записать изменения в файл
         {
             Type itemType = typeof(T);
             var props = itemType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
@@ -227,5 +228,34 @@ namespace WholesaleStoreSystem
             WriteCSV(people, pathTableProducts);
             Console.WriteLine("Выгрузка данных завершена");
         }
+        private static List<Cart> clearCart() //удаление товаров из корзины (все возможные варианты)
+        {
+            Console.WriteLine("Введите 0, если нужно очистить корзину полностью\nВведите 1, если хотите удалить конкретный товар");
+            int enter = int.Parse(Console.ReadLine());
+            switch (enter)
+            {
+                case 0:
+                    allProductsAtCart.Clear(); //очистить все
+                    Console.WriteLine("Все товары из корзины удалены!");
+                    break;
+                case 1:
+                    allProductsAtCart = findProductAtCart(); //очистить конкретный
+                    break;
+            }
+            return allProductsAtCart;
+        }
+        private static List<Cart> findProductAtCart() //удаление конкретного товара из корзины
+        {
+            Console.WriteLine("Введите id нужного товара:");
+            int id = int.Parse(Console.ReadLine());
+            if (!(id < 0 || id >= productsList.Count))
+            {
+                List<Cart> changeProducts = allProductsAtCart.FindAll(item => item.Id == id);
+                allProductsAtCart.Remove(changeProducts.First());
+                Console.WriteLine("Товар под номером {0} был удален", id);
+            }
+            return allProductsAtCart;
+        }
+
     }
 }

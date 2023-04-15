@@ -13,7 +13,7 @@ namespace WholesaleStoreSystem
         public double Price { get; set; }
         public override string ToString()
         {
-            return "Наименование: "+Name+", цена: "+Price;
+            return "Наименование: "+Name+", цена: "+Price+", id товара: "+Id;
         }
     }
     internal class UserCart
