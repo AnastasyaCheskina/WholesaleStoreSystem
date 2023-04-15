@@ -190,11 +190,13 @@ namespace WholesaleStoreSystem
         {
             Console.WriteLine("Введите поисковой запрос: (только точное совпадение по названию)");
             string text = Console.ReadLine();
-            List<Products> findText = new List<Products>();
-            foreach (var item in productsList)
-            {
-                if (item.Name == text) findText.Add(item);
-            }
+            List<Products> findText = productsList.Where(x=>x.Name.Contains(text)).ToList();
+
+            //List<Products> findText = new List<Products>();
+            //foreach (var item in productsList)
+            //{
+            //    if (item.Name == text) findText.Add(item);
+            //}
             if (findText.Count > 0)
             {
                 Console.WriteLine("Найденные запросы:");
