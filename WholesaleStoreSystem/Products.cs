@@ -26,7 +26,7 @@ namespace WholesaleStoreSystem
 
         public override string ToString()
         {
-            return "Наименование: " + name + ", цена: " + count.ToString() + ", id товара: " + id.ToString();
+            return "Наименование: " + name + ", цена: " + price.ToString() + ", id товара: " + id.ToString();
         }
     }
 

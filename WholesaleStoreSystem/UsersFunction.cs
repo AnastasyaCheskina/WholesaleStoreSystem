@@ -39,7 +39,7 @@ namespace WholesaleStoreSystem
             int znachFlag = 0;
             while (flag)
             {
-                Console.WriteLine("Доступные действия:\n1-Показать список товаров\n2-Добавить новый товар в список\n3-Удалить товар из списка\n4-Поиск\n5-Выгрузить изменения\n6-Посмотреть историю заказов\nВыберите номер действия: ");
+                Console.WriteLine("Доступные действия:\n1-Показать список товаров\n2-Добавить новый товар в список\n3-Удалить товар из списка\n4-Поиск\n5-Выгрузить изменения\nВыберите номер действия: ");
                 int numberFunc = int.Parse(Console.ReadLine());
                 switch (numberFunc)
                 {
@@ -57,9 +57,6 @@ namespace WholesaleStoreSystem
                         break;
                     case 5:
                         addChanges();
-                        break;
-                    case 6:
-                        showHistoryOrders();
                         break;
                     default:
                         Console.WriteLine("Неверное значение, повторите попытку");
@@ -83,7 +80,7 @@ namespace WholesaleStoreSystem
             while (flag)
             {
                 Console.WriteLine("Доступные действия:\n1-Показать список товаров\n2-Добавить товар в корзину и перейти\n3-Поиск\n4-Очистить корзину\n5-Перейти в корзину");
-                Console.WriteLine("6-Оформить заказ\n7-Посмотреть историю заказов\nВыберите номер действия:");
+                Console.WriteLine("6-Оформить заказ\nВыберите номер действия:");
                 int numberFunc = int.Parse(Console.ReadLine());
                 switch (numberFunc)
                 {
@@ -105,9 +102,6 @@ namespace WholesaleStoreSystem
                         break;
                     case 6:
                         placeOrder();
-                        break;
-                    case 7:
-                        showHistoryOrders();
                         break;
                     default:
                         Console.WriteLine("Неверное значение, повторите попытку");
